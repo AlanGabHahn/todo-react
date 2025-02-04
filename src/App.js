@@ -14,7 +14,17 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const todo = {
+      id: Math.random(),
+      title,
+      time,
+      done: false,
+    };
+
+    console.log(todo);
     setTitle("");
+    setTime("");
+
   }
 
   return (
