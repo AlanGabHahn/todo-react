@@ -12,7 +12,23 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+
+      const response = await fetch(API + "/todos")
+                          .then((res) => res.json())
+                          .then((data) => data)
+                          .catch((err) => console.log(err));
+
+      setLoading(false);
+      setTodos(response);
+    };
+
+    loadData();
+  }, []); 
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const todo = {
       id: Math.random(),
@@ -21,7 +37,14 @@ function App() {
       done: false,
     };
 
-    console.log(todo);
+    await fetch(API + "/todos", {
+      method: "POST",
+      body: JSON.stringify(todo),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     setTitle("");
     setTime("");
 
@@ -63,6 +86,11 @@ function App() {
       <div className="list-todo">
         <h2>Lista de tarefas</h2>
         {todos.length === 0 && <p>Não há tarefas</p>}
+        {todos.map((todo) => (
+          <div className="todo" key={todo.id}>
+            <p>{todo.title}</p>
+          </div>
+        ))}
       </div>
     </div>
   )
